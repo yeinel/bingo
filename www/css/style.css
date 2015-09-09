@@ -1,0 +1,37 @@
+/*# Empty CSS file for your own CSS*/
+
+
+/*Estilos para el carton*/
+.carton-content{
+    padding: 2%;
+}
+.carton-content fieldset{
+    border: 1px solid grey;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    padding: 1%;
+}
+
+
+.carton-content input[type="number"]{
+    width:50px;
+    height: 50px;
+    font-size: 25px;
+    text-align: center;
+    border: none;
+}
+.carton-content .warning input[type="number"]{
+    background-color: #fcf8e3;
+}
+.carton-content .success input[type="number"] {
+    background-color: #dff0d8;
+}
+.carton-content .active input[type="number"] {
+    background-color: #f5f5f5;
+}
+
+.carton-content td{
+    text-align: center;
+}
