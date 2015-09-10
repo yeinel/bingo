@@ -66,7 +66,7 @@ function new_carton(name, tipo_gane, num_filas, num_columnas) {
 
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
-    if (typeof bingo_cookie === 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie === 'undefined' || bingo_cookie == null || bingo_cookie == "null") {//pregunta si existe la cookie
         carton = llenar_carton(carton);
         bingo.cartones.push(carton);
         bingo_cookie = bingo;
@@ -169,7 +169,7 @@ function create_new_carton() {
 function actualizar_tipo_gane() {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
         $('#content-tipo-gane input[type="checkbox"]').each(function(index, value) {
             if ($(this).prop('checked')) {
                 var tipo_gane = $(this).attr("id");
@@ -189,7 +189,7 @@ function actualizar_tipo_gane() {
 function marcar_tipo_gane() {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
         $('#content-tipo-gane input[type="checkbox"]').prop('checked', false);
         $('#content-tipo-gane input[type="checkbox"]').attr('checked', false);
         $("#" + bingo_cookie.tipo_gane).prop('checked', true);
@@ -228,12 +228,12 @@ function graficar_carton(carton) {
             '<a href="javascript:poner_carton_modo_edicion(\'' + carton.id + '\');">Editar Carton</a>' +
             '</li>' +
             '<li>' +
-            '<a href="#">Limpiar Carton</a>' +
+            '<a href="javascript:varlidar_limpiar_carton(\'' + carton.id + '\');">Limpiar Carton</a>' +
             '</li>' +
             '<li class="divider">' +
             '</li>' +
             '<li>' +
-            '<a href="#">Eliminar Carton</a>' +
+            '<a href="javascript:varlidar_eliminar_carton(\'' + carton.id + '\');">Eliminar Carton</a>' +
             '</li>' +
             '</ul>' +
             '</div>' +
@@ -243,7 +243,7 @@ function graficar_carton(carton) {
             '<div class="col-md-12">' +
             '<div id="alert-' + carton.id + '" class="carton-alert alert alert-warning alert-dismissible" role="alert" style="display:none">' +
             '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '<div class="alert-content"><strong>Warning!</strong></div>' +
+            '<div class="alert-content"></div>' +
             '</div>' +
             '</div>' +
             '</div>';
@@ -289,9 +289,10 @@ function graficar_cartones() {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
         var cartones = bingo_cookie.cartones;
-        for (var carton_num = cartones.length - 1; carton_num >= 0; --carton_num) {
+//        for (var carton_num = cartones.length - 1; carton_num >= 0; --carton_num) {
+        for (var carton_num = 0; carton_num < cartones.length; carton_num++) {
 //            console.log(cartones[carton_num]);
             var carton = cartones[carton_num];
             var carton_template = graficar_carton(carton);//graficar el carton
@@ -344,6 +345,50 @@ function set_warning(id_num) {
     $("#td-" + id_num).addClass("warning");
 }
 
+/**
+ * Funcion que muestra mensaje de alert preguntando si se desea limpiar el carton
+ * @param {String} id_carton id del carton para llamar a la funcion de limpiar en el boton de aceptar
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function varlidar_limpiar_carton(id_carton) {
+//muestra el mensaje del warning con el mensaje de finalizar edicion
+    $("#alert-" + id_carton).addClass("alert-warning");
+    $("#alert-" + id_carton).show();
+    var html_alert = $("#alert-" + id_carton + " .alert-content").html();
+    $("#alert-" + id_carton + " .alert-content").html(html_alert +  '<div class="warning-limpiar"><br><strong>Warning!</strong> ¿Seguro que desea eliminar todos los n&uacute;meros del carton?   ' + '<button onclick="cancelar_limpiar(\'' + id_carton + '\');" type="button" class="btn btn-default">Cancelar</button><button onclick="limpiar_eliminar_carton(\'' + id_carton + '\',\'' + "limpiar" + '\')" type="button" class="btn btn-primary">Aceptar</button></div>');
+}
+
+function cancelar_limpiar(id_carton) {
+    $("#alert-" + id_carton + " .alert-content .warning-limpiar").remove();
+    var html_alert = $("#alert-" + id_carton + " .alert-content").html();
+    if (html_alert == "" || html_alert == "<br>") {//si queda vacio hay que ocultarlo
+        $("#alert-" + id_carton).hide();
+    }
+}
+
+/**
+ * Funcion que muestra mensaje de alert preguntando si se desea limpiar el carton
+ * @param {String} id_carton id del carton para llamar a la funcion de limpiar en el boton de aceptar
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function varlidar_eliminar_carton(id_carton) {
+//muestra el mensaje del warning con el mensaje de finalizar edicion
+    $("#alert-" + id_carton).addClass("alert-warning");
+    $("#alert-" + id_carton).show();
+    var html_alert = $("#alert-" + id_carton + " .alert-content").html();
+    $("#alert-" + id_carton + " .alert-content").html(html_alert +'<div class="warning-eliminar"><br><strong>Warning!</strong> ¿Seguro que desea eliminar el carton?   ' + '<button onclick="cancelar_eliminar(\'' + id_carton + '\');" type="button" class="btn btn-default">Cancelar</button><button onclick="limpiar_eliminar_carton(\'' + id_carton + '\',\'' + "eliminar" + '\')" type="button" class="btn btn-primary">Aceptar</button></div>');
+}
+
+function cancelar_eliminar(id_carton) {
+    $("#alert-" + id_carton + " .alert-content .warning-eliminar").remove();
+    var html_alert = $("#alert-" + id_carton + " .alert-content").html();
+    if (html_alert == "" || html_alert == "<br>") {//si queda vacio hay que ocultarlo
+        $("#alert-" + id_carton).hide();
+    }
+}
+
 //----------  Funciones  Opciones del carton ----------------------------------------------
 
 /**
@@ -357,9 +402,9 @@ function set_carton_modo(id_content_carton, modo_carton) {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
         var cartones = bingo_cookie.cartones;
-        for (var carton_num = cartones.length - 1; carton_num >= 0; --carton_num) {
+        for (var carton_num = 0; carton_num < cartones.length; carton_num++) {
 //            console.log(cartones[carton_num]);
             var carton = cartones[carton_num];
 
@@ -388,7 +433,8 @@ function poner_carton_modo_edicion(id_content_carton) {
     //muestra el mensaje del warning con el mensaje de finalizar edicion
     $("#alert-" + id_content_carton).addClass("alert-warning");
     $("#alert-" + id_content_carton).show();
-    $("#alert-" + id_content_carton + " .alert-content").html('<strong>Warning!</strong> El carton est&aacute; en modo edici&oacute;n    ' + '<button onclick="finalizar_carton_modo_edicion(\'' + id_content_carton + '\')" type="button" class="btn btn-primary">Finalizar modo  edici&oacute;n</button>');
+    var html_alert = $("#alert-" + id_content_carton + " .alert-content").html();
+    $("#alert-" + id_content_carton + " .alert-content").html(html_alert +'<div class="warning-edicion"><br><strong>Warning!</strong> El carton est&aacute; en modo edici&oacute;n    ' + '<button onclick="finalizar_carton_modo_edicion(\'' + id_content_carton + '\')" type="button" class="btn btn-primary">Finalizar modo  edici&oacute;n</button></div>');
 
 //actualizar el modo del carton (juego o edicion)
     set_carton_modo(id_content_carton, "edicion");
@@ -407,12 +453,62 @@ function finalizar_carton_modo_edicion(id_content_carton) {
     $("#carton-" + id_content_carton + " td input").attr('disabled', "disabled");
 
     //ocultar y limpiar alert
-    $("#alert-" + id_content_carton).hide();
-    $("#alert-" + id_content_carton + " .alert-content").html();
+
+    $("#alert-" + id_content_carton + " .alert-content .warning-edicion").remove();
+    var html_alert = $("#alert-" + id_content_carton + " .alert-content").html();
+    if (html_alert == "" || html_alert == "<br>") {//si queda vacio hay que ocultarlo
+        $("#alert-" + id_content_carton).hide();
+
+    }
+
 
 //actualizar el modo del carton (juego o edicion)
     set_carton_modo(id_content_carton, "juego");
 
+}
+
+/**
+ * Funcion que se encarga de limpiar el carton
+ * nuevo carton
+ * @param {String} id_content_carton es el id del contenedor de la estructura del carton
+ * @param {String} opcion si es limpiar o eliminar el carton
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function limpiar_eliminar_carton(id_carton, opcion) {
+    var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
+
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
+        var cartones = bingo_cookie.cartones;
+        for (var carton_num = 0; carton_num < cartones.length; carton_num++) {
+//            console.log(cartones[carton_num]);
+            var carton = cartones[carton_num];
+
+            if (carton.id == id_carton && opcion == "limpiar") {
+                for (var fila = 0; fila < parseInt(carton.num_filas); fila++) {
+                    for (var columna = 0; columna < parseInt(carton.num_columnas); columna++) {
+                        carton.matriz_num[fila][columna].estado = "";
+                        carton.matriz_num[fila][columna].value = "";
+                    }
+                }
+                bingo_cookie.cartones[carton_num] = carton;
+                cancelar_limpiar(id_carton);
+                break;
+            }
+            if (opcion == "eliminar") {           
+                cancelar_eliminar(id_carton);
+                bingo_cookie.cartones.splice(carton_num, 1);//eliminar el carton de la lista
+                $("#carton-"+id_carton).remove();//se elimina graficamente
+            }
+
+        }
+    }
+
+    $("#carton-" + id_carton + " td input[type='number']").val("");//limpia los valores
+
+    localStorage.setItem('bingo', JSON.stringify(bingo_cookie));//guarda nuevamente el bingo actualizado el carton
+
+    return bingo_cookie;
 }
 
 //---------- Fin Funciones  Opciones del carton  ----------------------------------------------
@@ -432,9 +528,9 @@ function update_value(id_carton, fila, columna, valor_num) {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
         var cartones = bingo_cookie.cartones;
-        for (var carton_num = cartones.length - 1; carton_num >= 0; --carton_num) {
+        for (var carton_num = 0; carton_num < cartones.length; carton_num++) {
 //            console.log(cartones[carton_num]);
             var carton = cartones[carton_num];
 
@@ -460,7 +556,7 @@ function update_value(id_carton, fila, columna, valor_num) {
 function add_num(num) {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
 
         bingo_cookie.lista_numeros.push(num);
         localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
@@ -479,9 +575,9 @@ function add_cartones_num(num) {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
 
-    if (typeof bingo_cookie !== 'undefined') {//pregunta si existe la cookie
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
         var cartones = bingo_cookie.cartones;
-        for (var carton_num = cartones.length - 1; carton_num >= 0; --carton_num) {
+        for (var carton_num = 0; carton_num < cartones.length; carton_num++) {
 //            console.log(cartones[carton_num]);
             var carton = cartones[carton_num];
 
