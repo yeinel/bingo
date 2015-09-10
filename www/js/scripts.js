@@ -75,7 +75,7 @@ $(document).ready(function() {
  * @version 1.0
  */
 function call_onchange_number() {
-    $(".carton-content td input[type='number']").on("change", function() {
+    $(document).on("change",".carton-content td input[type='number']", function() {
 
         var id_carton = $(this).data("carton_id");
         var fila = $(this).data("fila");
@@ -83,21 +83,21 @@ function call_onchange_number() {
         var valor_num = $(this).val();
         update_value(id_carton, fila, columna, valor_num);
     });
-    $(".carton-content td input[type='number']").on("keypress", function() {
+    $(document).on("change",".carton-content td input[type='number']", function() {
         var id_carton = $(this).data("carton_id");
         var fila = $(this).data("fila");
         var columna = $(this).data("columna");
         var valor_num = $(this).val();
         update_value(id_carton, fila, columna, valor_num);
     });
-    $(".carton-content td input[type='number']").on("keyup", function() {
+    $(document).on("change",".carton-content td input[type='number']", function() {
         var id_carton = $(this).data("carton_id");
         var fila = $(this).data("fila");
         var columna = $(this).data("columna");
         var valor_num = $(this).val();
         update_value(id_carton, fila, columna, valor_num);
     });
-    $(".carton-content td input[type='number']").on("keydown", function() {
+    $(document).on("change",".carton-content td input[type='number']", function() {
         var id_carton = $(this).data("carton_id");
         var fila = $(this).data("fila");
         var columna = $(this).data("columna");
