@@ -495,7 +495,8 @@ function limpiar_eliminar_carton(id_carton, opcion) {
                 cancelar_limpiar(id_carton);
                 break;
             }
-            if (opcion == "eliminar") {           
+            if (carton.id == id_carton && opcion == "eliminar") {     
+                console.log(bingo_cookie.cartones[carton_num]);
                 cancelar_eliminar(id_carton);
                 bingo_cookie.cartones.splice(carton_num, 1);//eliminar el carton de la lista
                 $("#carton-"+id_carton).remove();//se elimina graficamente
