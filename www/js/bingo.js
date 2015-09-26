@@ -356,7 +356,7 @@ function varlidar_limpiar_carton(id_carton) {
     $("#alert-" + id_carton).addClass("alert-warning");
     $("#alert-" + id_carton).show();
     var html_alert = $("#alert-" + id_carton + " .alert-content").html();
-    $("#alert-" + id_carton + " .alert-content").html(html_alert +  '<div class="warning-limpiar"><br><strong>Warning!</strong> ¿Seguro que desea eliminar todos los n&uacute;meros del carton?   ' + '<button onclick="cancelar_limpiar(\'' + id_carton + '\');" type="button" class="btn btn-default">Cancelar</button><button onclick="limpiar_eliminar_carton(\'' + id_carton + '\',\'' + "limpiar" + '\')" type="button" class="btn btn-primary">Aceptar</button></div>');
+    $("#alert-" + id_carton + " .alert-content").html(html_alert + '<div class="warning-limpiar"><br><strong>Warning!</strong> ¿Seguro que desea eliminar todos los n&uacute;meros del carton?   ' + '<button onclick="cancelar_limpiar(\'' + id_carton + '\');" type="button" class="btn btn-default">Cancelar</button><button onclick="limpiar_eliminar_carton(\'' + id_carton + '\',\'' + "limpiar" + '\')" type="button" class="btn btn-primary">Aceptar</button></div>');
 }
 
 function cancelar_limpiar(id_carton) {
@@ -378,7 +378,7 @@ function varlidar_eliminar_carton(id_carton) {
     $("#alert-" + id_carton).addClass("alert-warning");
     $("#alert-" + id_carton).show();
     var html_alert = $("#alert-" + id_carton + " .alert-content").html();
-    $("#alert-" + id_carton + " .alert-content").html(html_alert +'<div class="warning-eliminar"><br><strong>Warning!</strong> ¿Seguro que desea eliminar el carton?   ' + '<button onclick="cancelar_eliminar(\'' + id_carton + '\');" type="button" class="btn btn-default">Cancelar</button><button onclick="limpiar_eliminar_carton(\'' + id_carton + '\',\'' + "eliminar" + '\')" type="button" class="btn btn-primary">Aceptar</button></div>');
+    $("#alert-" + id_carton + " .alert-content").html(html_alert + '<div class="warning-eliminar"><br><strong>Warning!</strong> ¿Seguro que desea eliminar el carton?   ' + '<button onclick="cancelar_eliminar(\'' + id_carton + '\');" type="button" class="btn btn-default">Cancelar</button><button onclick="limpiar_eliminar_carton(\'' + id_carton + '\',\'' + "eliminar" + '\')" type="button" class="btn btn-primary">Aceptar</button></div>');
 }
 
 function cancelar_eliminar(id_carton) {
@@ -434,7 +434,7 @@ function poner_carton_modo_edicion(id_content_carton) {
     $("#alert-" + id_content_carton).addClass("alert-warning");
     $("#alert-" + id_content_carton).show();
     var html_alert = $("#alert-" + id_content_carton + " .alert-content").html();
-    $("#alert-" + id_content_carton + " .alert-content").html(html_alert +'<div class="warning-edicion"><br><strong>Warning!</strong> El carton est&aacute; en modo edici&oacute;n    ' + '<button onclick="finalizar_carton_modo_edicion(\'' + id_content_carton + '\')" type="button" class="btn btn-primary">Finalizar modo  edici&oacute;n</button></div>');
+    $("#alert-" + id_content_carton + " .alert-content").html(html_alert + '<div class="warning-edicion"><br><strong>Warning!</strong> El carton est&aacute; en modo edici&oacute;n    ' + '<button onclick="finalizar_carton_modo_edicion(\'' + id_content_carton + '\')" type="button" class="btn btn-primary">Finalizar modo  edici&oacute;n</button></div>');
 
 //actualizar el modo del carton (juego o edicion)
     set_carton_modo(id_content_carton, "edicion");
@@ -495,11 +495,11 @@ function limpiar_eliminar_carton(id_carton, opcion) {
                 cancelar_limpiar(id_carton);
                 break;
             }
-            if (carton.id == id_carton && opcion == "eliminar") {     
+            if (carton.id == id_carton && opcion == "eliminar") {
                 console.log(bingo_cookie.cartones[carton_num]);
                 cancelar_eliminar(id_carton);
                 bingo_cookie.cartones.splice(carton_num, 1);//eliminar el carton de la lista
-                $("#carton-"+id_carton).remove();//se elimina graficamente
+                $("#carton-" + id_carton).remove();//se elimina graficamente
             }
 
         }
@@ -562,6 +562,55 @@ function add_num(num) {
         bingo_cookie.lista_numeros.push(num);
         localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
 
+        var id_num = guidGenerator();
+        graficar_lista_numero(num, id_num);
+
+    }
+    return bingo_cookie;
+}
+
+/**
+ * Funcion que agrega el nuevo numero a la lista grafica
+ * @argument {String} num numero a graficar
+ * @argument {String} id_num id del numero en el grafico
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+
+function graficar_lista_numero(num, id_num) {
+    var template_num = '<li id="list-num-' + id_num + '">' +
+            '<div class="btn-group">' +
+            '<button class="btn btn-default" data-id="btn-num-' + id_num + '">' +
+            num
+            + '</button>' +
+            '<button data-toggle="dropdown" class="btn btn-default dropdown-toggle">' +
+            '<span class="caret"></span>' +
+            '</button>' +
+            '<ul  class="dropdown-menu">' +
+            '<li>' +
+            '<a href="#">Eliminar de Cartones</a>' +
+            '</li>' +
+            '</ul>' +
+            '</div>' +
+            '</li>';
+    $("#lista-numeros").prepend(template_num);//agregar numero a la lista en el panel grafico
+}
+
+/**
+ * Funcion que agrega todos los numero que han salido en la parte grafica (llamar en el document ready)
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+
+function graficar_lista_nummeros() {
+    var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
+
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
+
+        for (var cont_num = 0; cont_num < bingo_cookie.lista_numeros.length; cont_num++) {
+            var id_num = guidGenerator();
+            graficar_lista_numero(bingo_cookie.lista_numeros[cont_num], id_num);
+        }
     }
     return bingo_cookie;
 }

@@ -57,8 +57,6 @@ $('#content-tipo-gane input[type="checkbox"]').on("change", function(e) {
  */
 $(document).ready(function() {
 
-
-
     //marcar el tipo de gane seleccionado si se refresca la pagina
     marcar_tipo_gane();
 
@@ -67,6 +65,9 @@ $(document).ready(function() {
     graficar_cartones();//graficar los cartones que estan en session
 
     call_onchange_number();//llamar a la funcion del onchange
+    
+    graficar_lista_nummeros();//llama a la funcion para agregar de forma visual los numeros que ya han salido
+    
 });
 
 /**
@@ -116,6 +117,7 @@ function add_new_number() {
     var num = $("#inputNumber").val();
     if (num != ""){
         add_cartones_num(num);//llama a la funcion para buscar los numeros en los cartones
+        add_num(num);//Agrega el numero a la matriz y en la lista de numeros grafica
     }
 
 }

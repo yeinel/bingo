@@ -145,11 +145,10 @@
                         </div></div>
                     <div class="row">
                         <div class="col-md-8">                           
-                            <input type="text" class="form-control" id="inputNumber" placeholder="Ingrese nuevo N&uacute;mero">
+                            <input type="text" class="form-control input-lg" id="inputNumber" placeholder="Ingrese nuevo N&uacute;mero">
                         </div>
                         <div class="col-md-4">
-
-                            <button type="button" class="btn btn-primary btn-block" onclick="add_new_number();">
+                            <button type="button" class="btn btn-primary btn-block btn-lg" onclick="add_new_number();">
                                 Agregar
                             </button>
                         </div>
@@ -172,7 +171,7 @@
                                         <a href="#panel-283878" data-toggle="tab">Cartones</a>
                                     </li>
                                     <li>
-                                        <a href="#panel-479230" data-toggle="tab">N&uacute;meros en cola</a>
+                                        <a href="#panel-lista-numeros" data-toggle="tab">N&uacute;meros en cola</a>
                                     </li>
                                 </ul>
                                 <div class="tab-content">
@@ -311,73 +310,11 @@
                                             </div>     
                                         </div>
                                     </div>
-                                    <div class="tab-pane" id="panel-479230">
+                                    <div class="tab-pane" id="panel-lista-numeros">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <ul class="list-unstyled">
-                                                    <li id="list-num-1">
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-default">
-                                                                1
-                                                            </button> 
-                                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-                                                                <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li>
-                                                                    <a href="#">Eliminar de Cartones</a>
-                                                                </li>
-                                                                <li class="divider">
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">Visualizar en cartones</a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-
-                                                    <li id="list-num-2">
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-default">
-                                                                2
-                                                            </button> 
-                                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-                                                                <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li>
-                                                                    <a href="#">Eliminar de Cartones</a>
-                                                                </li>
-                                                                <li class="divider">
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">Visualizar en cartones</a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-
-                                                    <li id="list-num-3">
-                                                        <div class="btn-group">
-                                                            <button class="btn btn-default">
-                                                                3
-                                                            </button> 
-                                                            <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-                                                                <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu">
-                                                                <li>
-                                                                    <a href="#">Eliminar de Cartones</a>
-                                                                </li>
-                                                                <li class="divider">
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">Visualizar en cartones</a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                    </li>
-
+                                                <ul id='lista-numeros' class="list-unstyled">
+                                                    
                                                 </ul>                                                
                                             </div>
                                         </div>
