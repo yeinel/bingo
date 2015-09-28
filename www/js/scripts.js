@@ -1,21 +1,6 @@
 // JS para Acciones generales
 
 /**
- * Funcion para que sea posible marcar una unica opción entre las opciones de 
- * tipo de gane del carton.
- * @author Yeinel Rodriguez Murillo
- * @version 1.0
- */
-$('#content-tipo-gane input[type="checkbox"]').on('change', function() {
-    $('#content-tipo-gane input[type="checkbox"]').each(function(index, value) {
-        $(this).prop('checked', false);
-        $(this).attr('checked', false);
-    });
-    $(this).prop('checked', true);
-    $(this).attr('checked', true);
-});
-
-/**
  * Funcion para generar un id aleatorio
  * @author Yeinel Rodriguez Murillo
  * @version 1.0
@@ -43,10 +28,57 @@ $('#modal-new-carton').on('show.bs.modal', function(e) {
  * @author Yeinel Rodriguez Murillo
  * @version 1.0
  */
-$('#content-tipo-gane input[type="checkbox"]').on("change", function(e) {
-    actualizar_tipo_gane();//actualiza el cookie con el tipo de gane
-//    var bingo_cookie = Cookies.getJSON('bingo');
-//    console.log(bingo_cookie);
+$(document).on("click", '#content-tipo-gane a', function(e) {
+    var $this = this;
+    $("#ModalMensaje").modal('show');
+    $("#ModalMensaje .modal-body").html("Si cambia el tipo de juego se limpiaran todos los cartones.");
+    $("#ModalMensaje #mensaje_aceptar").unbind('click').click(function() {
+        var refrescar_pagina = actualizar_tipo_gane($this);//actualiza el cookie con el tipo de gane
+        limpiar_todos_cartones();
+        location.reload();
+    });
+
+});
+
+/**
+ * Funcion a ejecutar con el click del limpiar todos los cartones
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+$('#btnLimpiarCartones').click(function(e) {
+    $("#ModalMensaje").modal('show');
+    $("#ModalMensaje .modal-body").html("Seguro que desea limpiar todos los cartones?");
+    $("#ModalMensaje #mensaje_aceptar").unbind('click').click(function() {
+        limpiar_todos_cartones();
+        $('#ModalMensaje').modal('hide');
+        location.reload();
+    });
+});
+
+/**
+ * Funcion a ejecutar con el click del eliminar cartones
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+$('#btnEliminarCartones').click(function(e) {
+    $("#ModalMensaje").modal('show');
+    $("#ModalMensaje .modal-body").html("Seguro que desea eliminar todos los cartones?");
+    $("#ModalMensaje #mensaje_aceptar").unbind('click').click(function() {
+        localStorage.clear();
+        $('#ModalMensaje').modal('hide');
+        location.reload();
+    });
+});
+
+
+/**
+ * Funcion a ejecutar en el onchange del combo gale linea especifico
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+$(document).on("click", '#content-text_gane-linea-columna a', function(e) {
+    actualizar_tipo_gane_especifico(this);//actualiza el cookie con el tipo de gane
+    location.reload();
 });
 
 
@@ -61,13 +93,14 @@ $(document).ready(function() {
     marcar_tipo_gane();
 
     var bingo_storage = JSON.parse(localStorage.getItem('bingo'));
-    console.log(bingo_storage);
+//    console.log(bingo_storage);
     graficar_cartones();//graficar los cartones que estan en session
 
     call_onchange_number();//llamar a la funcion del onchange
-    
+
     graficar_lista_nummeros();//llama a la funcion para agregar de forma visual los numeros que ya han salido
-    
+
+    validar_gane();
 });
 
 /**
@@ -76,29 +109,7 @@ $(document).ready(function() {
  * @version 1.0
  */
 function call_onchange_number() {
-    $(document).on("change",".carton-content td input[type='number']", function() {
-
-        var id_carton = $(this).data("carton_id");
-        var fila = $(this).data("fila");
-        var columna = $(this).data("columna");
-        var valor_num = $(this).val();
-        update_value(id_carton, fila, columna, valor_num);
-    });
-    $(document).on("change",".carton-content td input[type='number']", function() {
-        var id_carton = $(this).data("carton_id");
-        var fila = $(this).data("fila");
-        var columna = $(this).data("columna");
-        var valor_num = $(this).val();
-        update_value(id_carton, fila, columna, valor_num);
-    });
-    $(document).on("change",".carton-content td input[type='number']", function() {
-        var id_carton = $(this).data("carton_id");
-        var fila = $(this).data("fila");
-        var columna = $(this).data("columna");
-        var valor_num = $(this).val();
-        update_value(id_carton, fila, columna, valor_num);
-    });
-    $(document).on("change",".carton-content td input[type='number']", function() {
+    $(document).on("change", ".carton-content td input[type='number']", function() {
         var id_carton = $(this).data("carton_id");
         var fila = $(this).data("fila");
         var columna = $(this).data("columna");
@@ -115,9 +126,10 @@ function call_onchange_number() {
  */
 function add_new_number() {
     var num = $("#inputNumber").val();
-    if (num != ""){
+    if (num != "") {
         add_cartones_num(num);//llama a la funcion para buscar los numeros en los cartones
         add_num(num);//Agrega el numero a la matriz y en la lista de numeros grafica
+        validar_gane();
     }
 
 }

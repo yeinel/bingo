@@ -26,67 +26,51 @@
                             </button> <label class="navbar-brand">A JUEGAR BINGO...!!!</label>
                         </div>
                         <div class="navbar-collapse collapse in" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav">
+
+                            <ul class="nav navbar-nav">                                
                                 <li>
                                     <a href="#modal-new-carton" role="button"  data-toggle="modal">Crear Nuevo Carton</a>
                                 </li>
                                 <li>
-                                    <a href="#">Limpiar cartones</a>
+                                    <a href="#" id='btnLimpiarCartones'>Limpiar cartones</a>
                                 </li>
                                 <li>
-                                    <a href="#">Eliminar cartones</a>
+                                    <a href="#" id='btnEliminarCartones'>Eliminar cartones</a>
                                 </li>
                             </ul>
-                            <form class="navbar-form navbar-left" role="search">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Buscar n&uacute;mero en cartones...">
-                                </div> 
-                                <button type="submit" class="btn btn-default" onclick="javascript:Cookies.remove('bingo');">
-                                    Buscar
-                                </button>
-                            </form>
-                            <div class="row">
-                                <div class="col-md-12">                                    
-                                    <div  id="content-tipo-gane">
-                                        <div class="checkbox navbar-text"> 
-                                            <label></label>
-                                        </div>
-                                        <div class="checkbox navbar-text"> 
-                                            <label><strong>Tipo de gane:</strong></label>
-                                        </div>
-                                        <div class="checkbox navbar-text">   
-                                            <label>
-                                                <input checked type="checkbox" id="tipogane-completo" name="tipogane-completo"> Cart&oacute;n Completo
-                                            </label>
-                                        </div>
-                                        <div class="checkbox navbar-text">   
-                                            <label>
-                                                <input type="checkbox" id="tipogane-4esquinas" name="tipogane-4esquinas"> 4 Esquinas
-                                            </label>
-                                        </div>
-                                        <div class="checkbox navbar-text">
-                                            <label>
-                                                <input type="checkbox" id="tipogane-linea" name="tipogane-linea"> Linea
-                                            </label>
-                                        </div>
-                                        <div class="checkbox navbar-text">
-                                            <label>
-                                                <input type="checkbox" id="tipogane-linea-horizontal" name="tipogane-linea-horizontal"> Linea horizontal
-                                            </label>
-                                        </div>
-                                        <div class="checkbox navbar-text">
-                                            <label>
-                                                <input type="checkbox" id="tipogane-linea-vertical" name="tipogane-linea-vertical"> Linea Vertical
-                                            </label>
-                                        </div>
-                                        <div class="checkbox navbar-text">
-                                            <label>
-                                                <input type="checkbox" id="tipogane-linea-diagonal" name="tipogane-linea-diagonal"> Linea Diagonal
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <div class="input-group navbar-btn">
+                                <div id="content-tipo-gane" class="input-group-btn">
+                                    <button id="btn-gane" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-tipo_gane="tipogane-completo"> Cart&oacute;n Completo<span class="caret"></span></button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#" id="tipogane-completo" name="tipogane-completo">Cart&oacute;n Completo</a></li>
+                                        <li><a href="#" id="tipogane-4esquinas" name="tipogane-4esquinas">4 Esquinas</a></li>
+                                        <li><a href="#" id="tipogane-linea" name="tipogane-linea">Linea espec&iacute;fica</a></li>
+                                        <li><a href="#" id="tipogane-columna" name="tipogane-columna">Columna espec&iacute;fica</a></li>
+                                        <li><a href="#" id="tipogane-cualquier-linea" name="tipogane-cualquier-linea">Cualquier Linea</a></li>
+                                        <li><a href="#" id="tipogane-linea-horizontal" name="tipogane-linea-horizontal">Cualquier Linea Horizontal</a></li>
+                                        <li><a href="#" id="tipogane-linea-vertical" name="tipogane-linea-vertical">Cualquier Linea Vertical</a></li>
+                                        <li><a href="#" id="tipogane-cualquier-diagonal" name="tipogane-cualquier-diagonal" title="Cualquier linea">Cualquier Diagonal</a></li>
+                                        <li><a href="#" id="tipogane-linea-diagonal-si-id" name="tipogane-linea-diagonal-si-id" title="Linea que va desde la esquina superior izquierda a la esquina inferior derecha">Linea Diagonal SI-ID</a></li>
+                                        <li><a href="#" id="tipogane-linea-diagonal-ii-sd" name="tipogane-linea-diagonal-ii-sd" title="Linea que va desde la esquina inferior izquierda a la esquina superior derecha">Linea Diagonal II-SD</a></li>
+                                        <li><a href="#" id="tipogane-en-x" name="tipogane-en-x">En x</a></li>
+                                    </ul>
+                                </div><!-- /btn-group -->
+                                <div id='content-text_gane-linea-columna' style="display: none;" class="dropdown">
+                                    <button id="text_gane-linea-columna" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" data-tipo_gane_especifico='tipogane-especifico-1'>
+                                        1
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                        <li><a href="#" id="tipogane-especifico-1" name="tipogane-especifico-1">1</a></li>
+                                        <li><a href="#" id="tipogane-especifico-2" name="tipogane-especifico-2">2</a></li>
+                                        <li><a href="#" id="tipogane-especifico-3" name="tipogane-especifico-3">3</a></li>
+                                        <li><a href="#" id="tipogane-especifico-4" name="tipogane-especifico-4">4</a></li>
+                                        <li><a href="#" id="tipogane-especifico-5" name="tipogane-especifico-5">5</a></li>
+                                    </ul>
+                                </div>                               
+
+                            </div><!-- /input-group -->
+
                         </div>
                     </nav>                    
                     <div class='row'><div class="col-md-12">
@@ -117,14 +101,16 @@
                                                         <div class="form-group">
                                                             <label><strong>Nombre o c&oacute;digo del cart&oacute;n:</strong></label>
                                                             <input type="text" id="new-nombre" class="form-control">
-                                                        </div>                                                                                                
-                                                        <div class="form-group">
-                                                            <label><strong>N&uacute;mero de Filas:</strong></label>
-                                                            <input type='number' value="5"  id='new-num-filas' class="form-control">
                                                         </div>
-                                                        <div class="form-group">
-                                                            <label><strong>N&uacute;mero de Columnas:</strong></label>
-                                                            <input type='number' value="5" id='new-num-columnas' class="form-control">
+                                                        <div style="display:none;">
+                                                            <div class="form-group">
+                                                                <label><strong>N&uacute;mero de Filas:</strong></label>
+                                                                <input type='number' value="5"  id='new-num-filas' class="form-control">
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label><strong>N&uacute;mero de Columnas:</strong></label>
+                                                                <input type='number' value="5" id='new-num-columnas' class="form-control">
+                                                            </div>
                                                         </div>
                                                     </form>
                                                 </div></div>
@@ -142,14 +128,33 @@
                                 </div>
 
                             </div>
-                        </div></div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="ModalMensaje" tabindex="-1" role="dialog">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">Advertencia</h4>
+                                        </div>
+                                        <div class="modal-body">
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button id="mensaje_cancelar" type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                            <button id="mensaje_aceptar" type="button" class="btn btn-primary">Aceptar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-8">                           
                             <input type="text" class="form-control input-lg" id="inputNumber" placeholder="Ingrese nuevo N&uacute;mero">
                         </div>
                         <div class="col-md-4">
                             <button type="button" class="btn btn-primary btn-block btn-lg" onclick="add_new_number();">
-                                Agregar
+                                Buscar
                             </button>
                         </div>
                     </div>
@@ -177,144 +182,14 @@
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="panel-283878">
                                         <div id="cartones-content" class="row">
-                                            <div class="carton-content col-md-6">
-                                                <fieldset>                                                    
-                                                    <div class="row content-carton-option">
-                                                        <div class="col-md-6">
-                                                            <input placeholder="Buscar N&uacute;mero en este carton..." type="text" class="form-control carton-btn-search">
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="btn-group">
 
-                                                                <button class="btn btn-default">
-                                                                    Nombre del carton                                                     
-                                                                </button> 
-
-                                                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle">
-                                                                    <span class="caret"></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <li>
-                                                                        <a href="#">Editar Carton</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#">Limpiar Carton</a>
-                                                                    </li>
-                                                                    <li class="divider">
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#">Eliminar Carton</a>
-                                                                    </li>                                                        
-                                                                </ul>                                                   
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="carton-alert alert alert-warning alert-dismissible" role="alert">
-                                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                                <div class="alert-content"><strong>Warning!</strong> Better check yourself, you're not looking too good.</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <table class="table table-bordered table-hover">
-                                                        <tbody>                                                
-                                                            <tr>
-                                                                <td class="active">
-                                                                    <input type="number" disabled value="1">                                                                
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="2"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="3"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="4"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="5"> 
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="success">
-                                                                    <input type="number" value="1">                                                                
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="2"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="3"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="4"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="5"> 
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="warning">
-                                                                    <input class="warning" type="number" value="1">                                                                
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="2"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="3"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="4"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="5"> 
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="number" value="1">                                                                
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="2"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="3"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="4"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="5"> 
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="number" value="1">                                                                
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="2"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="3"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="4"> 
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" value="5"> 
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </fieldset>
-                                            </div>     
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="panel-lista-numeros">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <ul id='lista-numeros' class="list-unstyled">
-                                                    
+
                                                 </ul>                                                
                                             </div>
                                         </div>

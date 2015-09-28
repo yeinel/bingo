@@ -1,42 +1,4 @@
 // JS  para funciones generales  del bingo
-
-/**
- * Objetos globales del bingo 
- * @author Yeinel Rodriguez Murillo
- * @version 1.0
- */
-//var bingo = {//objeto con los atributos y funciones del bingo 
-//     name : "",
-//     tipo_gane:"",
-//     cartones : []
-//}
-
-/**
- * Objeto global del carton 
- * @author Yeinel Rodriguez Murillo
- * @version 1.0
- */
-//var carton = {
-//    estado:"",
-//    id: "",
-//    name:"",
-//    num_filas:"",
-//    num_columnas:"",
-//    matriz_num:[]    
-//}
-
-/**
- * Objeto global de los numeros de un carton
- * @author Yeinel Rodriguez Murillo
- * @version 1.0
- */
-//var numero_carton = {
-//    id:"",
-//    estado:"",//active or inactive
-//    value:""  
-//}
-
-
 //---------- Funciones del Bingo ----------------------------------------------
 
 /**
@@ -44,7 +6,7 @@
  * @author Yeinel Rodriguez Murillo
  * @version 1.0
  */
-function new_carton(name, tipo_gane, num_filas, num_columnas) {
+function new_carton(name, tipo_gane, tipo_gane_especifico, num_filas, num_columnas) {
 
     var id_carton = guidGenerator();
 
@@ -60,6 +22,7 @@ function new_carton(name, tipo_gane, num_filas, num_columnas) {
     var bingo = {//objeto con los atributos y funciones del bingo 
         name: "nuevo_bingo",
         tipo_gane: tipo_gane,
+        tipo_gane_especifico: tipo_gane_especifico,
         cartones: [],
         lista_numeros: []
     };
@@ -72,12 +35,10 @@ function new_carton(name, tipo_gane, num_filas, num_columnas) {
         bingo_cookie = bingo;
         localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
     } else {
-//        console.log(bingo_cookie);
         carton = llenar_carton(carton);
         bingo_cookie.tipo_gane = tipo_gane;
+        bingo_cookie.tipo_gane_especifico = tipo_gane_especifico;
         bingo_cookie.cartones.push(carton);
-//        console.log(bingo_cookie);
-//        Cookies.remove('bingo');
         localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
     }
 
@@ -129,12 +90,8 @@ function create_new_carton() {
     $("#alert-new-carton").hide();
 
     var name = $("#new-nombre").val();
-    var tipo_gane = "";
-    $('#content-tipo-gane input[type="checkbox"]').each(function(index, value) {
-        if ($(this).prop('checked')) {
-            tipo_gane = $(this).attr("id");
-        }
-    });
+    var tipo_gane = $("#btn-gane").data("tipo_gane");
+    var tipo_gane_especifico = $("#text_gane-linea-columna").data("tipo_gane_especifico");
     var num_filas = $("#new-num-filas").val();
     var num_columnas = $("#new-num-columnas").val();
 
@@ -146,11 +103,10 @@ function create_new_carton() {
 
         $("#alert-new-carton .alert-content").html("Llene todos los campos");
     } else {
-        var carton = new_carton(name, tipo_gane, num_filas, num_columnas);
+        var carton = new_carton(name, tipo_gane, tipo_gane_especifico, num_filas, num_columnas);
         var carton_template = graficar_carton(carton);//graficar el carton
 
         var bingo_cookie3 = JSON.parse(localStorage.getItem('bingo'));
-        console.log(bingo_cookie3);
 
         $("#cartones-content").prepend(carton_template);
 
@@ -162,21 +118,45 @@ function create_new_carton() {
 
 /**
  * Funcion que actualiza el tipo de gane del bingo
- * nuevo carton
  * @author Yeinel Rodriguez Murillo
  * @version 1.0
  */
-function actualizar_tipo_gane() {
+function actualizar_tipo_gane(element) {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
     if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
-        $('#content-tipo-gane input[type="checkbox"]').each(function(index, value) {
-            if ($(this).prop('checked')) {
-                var tipo_gane = $(this).attr("id");
-                bingo_cookie.tipo_gane = tipo_gane;
-                localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
-            }
-        });
+        var tipo_gane = $(element).attr("id");
+        $("#content-text_gane-linea-columna").hide();
+
+        bingo_cookie.tipo_gane = tipo_gane;
+        bingo_cookie.tipo_gane_especifico = "tipogane-especifico-1";
+
+        $("#text_gane-linea-columna").html($("#tipogane-especifico-1").html() + " <span class='caret'></span>");
+        $("#text_gane-linea-columna").data("tipo_gane_especifico", "tipogane-especifico-1");
+        $("#btn-gane").html($(element).html() + " <span class='caret'></span>");
+        $("#btn-gane").data("tipo_gane", tipo_gane);
+        localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
+
+        if ((tipo_gane === "tipogane-linea") || (tipo_gane === "tipogane-columna")) {
+            $("#content-text_gane-linea-columna").show();
+            return false;
+        }
+        return true;
+    }
+}
+/**
+ * Funcion que actualiza el tipo de gane  especifico
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function actualizar_tipo_gane_especifico(element) {
+    var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
+
+    if (bingo_cookie) {//pregunta si existe la cookie
+        var tipo_gane_especifico = $(element).attr("id");
+        bingo_cookie.tipo_gane_especifico = tipo_gane_especifico;
+        $("#btn-gane").html($(element).html() + " <span class='caret'></span>");
+        localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
     }
 }
 
@@ -190,10 +170,13 @@ function marcar_tipo_gane() {
     var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
 
     if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
-        $('#content-tipo-gane input[type="checkbox"]').prop('checked', false);
-        $('#content-tipo-gane input[type="checkbox"]').attr('checked', false);
-        $("#" + bingo_cookie.tipo_gane).prop('checked', true);
-        $("#" + bingo_cookie.tipo_gane).attr('checked', true);
+        var tipo_gane = bingo_cookie.tipo_gane;
+        $("#content-text_gane-linea-columna").hide();
+        if ((tipo_gane === "tipogane-linea") || (tipo_gane === "tipogane-columna")) {
+            $("#content-text_gane-linea-columna").show();
+            $("#text_gane-linea-columna").html($("#" + bingo_cookie.tipo_gane_especifico).html() + " <span class='caret'></span>");
+        }
+        $("#btn-gane").html($("#" + bingo_cookie.tipo_gane).html() + " <span class='caret'></span>");
     }
 }
 
@@ -211,11 +194,8 @@ function graficar_carton(carton) {
 
     html_carton += '<div id="carton-' + carton.id + '" class="carton-content col-md-6">' +
             '<fieldset>' +
-            '<div class="row content-carton-option">' +
-            '<div class="col-md-6">' +
-            '<input placeholder="Buscar N&uacute;mero en este carton..." type="text" class="form-control carton-btn-search">' +
-            '</div>' +
-            '<div class="col-md-6">' +
+            '<div class="row content-carton-option">' +            
+            '<div class="col-md-12">' +
             '<div class="btn-group pull-right">' +
             '<button class="btn btn-default">' +
             '<strong>' + carton.name + '</strong>' +
@@ -242,7 +222,6 @@ function graficar_carton(carton) {
             '<div class="row">' +
             '<div class="col-md-12">' +
             '<div id="alert-' + carton.id + '" class="carton-alert alert alert-warning alert-dismissible" role="alert" style="display:none">' +
-            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
             '<div class="alert-content"></div>' +
             '</div>' +
             '</div>' +
@@ -488,7 +467,7 @@ function limpiar_eliminar_carton(id_carton, opcion) {
                 for (var fila = 0; fila < parseInt(carton.num_filas); fila++) {
                     for (var columna = 0; columna < parseInt(carton.num_columnas); columna++) {
                         carton.matriz_num[fila][columna].estado = "";
-                        carton.matriz_num[fila][columna].value = "";
+//                        carton.matriz_num[fila][columna].value = "";
                     }
                 }
                 bingo_cookie.cartones[carton_num] = carton;
@@ -504,12 +483,34 @@ function limpiar_eliminar_carton(id_carton, opcion) {
 
         }
     }
-
-    $("#carton-" + id_carton + " td input[type='number']").val("");//limpia los valores
+    $("#carton-" + id_carton + " td").attr("class", "limpiar");//limpia los valores
 
     localStorage.setItem('bingo', JSON.stringify(bingo_cookie));//guarda nuevamente el bingo actualizado el carton
 
     return bingo_cookie;
+}
+
+/**
+ * Funcion que limpia todos los cartones
+ * nuevo carton
+ * @param {String} id_content_carton es el id del contenedor de la estructura del carton
+ * @param {String} opcion si es limpiar o eliminar el carton
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function limpiar_todos_cartones() {
+    var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
+
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
+
+        var cartones = bingo_cookie.cartones;
+        for (var carton_num = 0; carton_num < cartones.length; carton_num++) {
+            var carton = cartones[carton_num];
+            bingo_cookie = limpiar_eliminar_carton(carton.id, "limpiar");
+        }
+        bingo_cookie.lista_numeros = [];
+    }
+    localStorage.setItem('bingo', JSON.stringify(bingo_cookie));//guarda nuevamente el bingo actualizado el carton
 }
 
 //---------- Fin Funciones  Opciones del carton  ----------------------------------------------
@@ -559,11 +560,13 @@ function add_num(num) {
 
     if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {//pregunta si existe la cookie
 
-        bingo_cookie.lista_numeros.push(num);
-        localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
+        if (bingo_cookie.lista_numeros.indexOf(num) === -1) {
+            bingo_cookie.lista_numeros.push(num);
+            localStorage.setItem('bingo', JSON.stringify(bingo_cookie));
 
-        var id_num = guidGenerator();
-        graficar_lista_numero(num, id_num);
+            var id_num = guidGenerator();
+            graficar_lista_numero(num, id_num);
+        }
 
     }
     return bingo_cookie;
@@ -649,6 +652,489 @@ function add_cartones_num(num) {
     localStorage.setItem('bingo', JSON.stringify(bingo_cookie));//guarda nuevamente el bingo actualizado el carton
 
     return bingo_cookie;
+}
+
+/**
+ * Funcion que valida gane  por carton
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function validar_gane() {
+    var bingo_cookie = JSON.parse(localStorage.getItem('bingo'));
+
+    if (typeof bingo_cookie !== 'undefined' && bingo_cookie != null && bingo_cookie != "null") {
+        var cartones = bingo_cookie.cartones;
+        var cartones_length = cartones.length;
+        var tipo_gane = bingo_cookie.tipo_gane;
+        var tipo_gane_especifico = bingo_cookie.tipo_gane_especifico;
+        for (var carton_num = 0; carton_num < cartones_length; carton_num++) {
+            var carton = cartones[carton_num];
+            var validar_gane = false;
+            switch (tipo_gane) {
+                case "tipogane-completo":
+                    validar_gane = gane_carton_completo(carton);
+                    break;
+                case "tipogane-4esquinas":
+                    validar_gane = gane_cuatro_esquinas(carton);
+                    break;
+                case "tipogane-cualquier-linea":
+
+                    break;
+                case "tipogane-linea":
+                    var num = tipo_gane_especifico.match(/\d/g);
+                    num = (parseInt(num[0]) - 1);
+                    gane_linea(num, carton);
+                    break;
+                case "tipogane-columna":
+                    var num = tipo_gane_especifico.match(/\d/g);
+                    num = (parseInt(num[0]) - 1);
+                    gane_columna(num, carton);
+                    break;
+                case "tipogane-linea-horizontal":
+                    gane_linea_horizontal(carton);
+                    break;
+                case "tipogane-linea-vertical":
+                    gane_linea_vertical(carton);
+                    break;
+                case "tipogane-cualquier-diagonal":
+
+                    break;
+                case "tipogane-linea-diagonal-si-id":
+                    validar_gane = gane_diagonal_superior_izquierda_a_inferior_derecha(carton);
+                    break;
+                case "tipogane-linea-diagonal-ii-sd":
+                    validar_gane = gane_diagonal_inferior_izquierda_a_superior_derecha(carton);
+                    break;
+                case "tipogane-en-x":
+                    validar_gane = gane_en_x(carton);
+                    break;
+            }
+            if (validar_gane !== false) {
+                if (validar_gane.resultado === "warning") {
+                    graficar_warning(validar_gane.array_numeros);
+                }
+                if (validar_gane.resultado === "success") {
+                    graficar_success(validar_gane.array_numeros);
+                }
+            }
+        }
+    }
+}
+
+
+/**
+ * Funcion que valida gane de cartón completo
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+
+function gane_carton_completo(carton) {
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    var contador_active = 0;
+    var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+    for (var fila = 0; fila < carton_filas; fila++) {
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[fila][columna].estado;
+            var num_id = carton.matriz_num[fila][columna].id;
+            if (num_estado === "active") {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+    }
+
+    if (contador_active === ((carton_filas * carton_columnas) - 1)) {//llamar graficar warning
+        var result = {
+            resultado: "warning",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    if (contador_active === (carton_filas * carton_columnas)) {//llamar graficar success
+        var result = {
+            resultado: "success",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+
+    var result = {
+        resultado: ""
+    };
+    return result;
+
+}
+
+/**
+ * Funcion que valida gane de cartón completo
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_cuatro_esquinas(carton) {
+//            console.log(cartones[carton_num]);
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    var contador_active = 0;
+    var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+    for (var fila = 0; fila < carton_filas; fila++) {
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[fila][columna].estado;
+            var num_id = carton.matriz_num[fila][columna].id;
+            if ((num_estado === "active") && (validar_esquina(carton_filas, carton_columnas, fila, columna))) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+    }
+
+    if (contador_active === 3) {//llamar graficar warning
+        var result = {
+            resultado: "warning",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    if (contador_active === 4) {//llamar graficar success
+        var result = {
+            resultado: "success",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    var result = {
+        resultado: ""
+    };
+    return result;
+}
+
+/**
+ * Funcion que valida que un número sea esquina
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function validar_esquina(carton_fila, carton_columna, num_fila, num_columna) {
+    if (esquina_superior_izquierda(carton_fila, carton_columna, num_fila, num_columna) ||
+            esquina_inferior_izquierda(carton_fila, carton_columna, num_fila, num_columna) ||
+            esquina_superior_derecha(carton_fila, carton_columna, num_fila, num_columna) ||
+            esquina_inferior_derecha(carton_fila, carton_columna, num_fila, num_columna)
+            ) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Funcion que valida que un número sea esquina superior izquierda
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function esquina_superior_izquierda(carton_fila, carton_columna, num_fila, num_columna) {
+    if (num_fila + num_columna === 0) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Funcion que valida que un número sea esquina inferior izquierda
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function esquina_inferior_izquierda(carton_fila, carton_columna, num_fila, num_columna) {
+    if ((num_columna === 0) && ((num_fila + 1) === carton_fila)) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Funcion que valida que un número sea esquina superior derecha
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function esquina_superior_derecha(carton_fila, carton_columna, num_fila, num_columna) {
+    if ((num_fila === 0) && ((num_columna + 1) === carton_columna)) {
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Funcion que valida que un número sea esquina inferior derecha
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function esquina_inferior_derecha(carton_fila, carton_columna, num_fila, num_columna) {
+    if (((num_columna + 1) === carton_columna) && ((num_fila + 1) === carton_fila)) {
+        return true;
+    }
+
+    return false;
+}
+
+
+
+
+/**
+ * Funcion que valida gane de diagonal esquina superior izquierda - esquina inferior derecha
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_diagonal_superior_izquierda_a_inferior_derecha(carton) {
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    var contador_active = 0;
+    var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+    for (var fila = 0; fila < carton_filas; fila++) {
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[fila][columna].estado;
+            var num_id = carton.matriz_num[fila][columna].id;
+            if ((num_estado === "active") && (fila === columna)) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+    }
+
+    if (contador_active === (carton_filas - 1)) {//llamar graficar warning
+        var result = {
+            resultado: "warning",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    if (contador_active === carton_filas) {//llamar graficar success
+        var result = {
+            resultado: "success",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    var result = {
+        resultado: ""
+    };
+    return result;
+}
+
+/**
+ * Funcion que valida gane de diagonal esquina inferior izquierda - esquina superior derecha
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_diagonal_inferior_izquierda_a_superior_derecha(carton) {
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    var contador_active = 0;
+    var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+    for (var fila = 0; fila < carton_filas; fila++) {
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[fila][columna].estado;
+            var num_id = carton.matriz_num[fila][columna].id;
+            if ((num_estado === "active") && (((fila + columna) + 1) === carton_filas)) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+    }
+
+    if (contador_active === (carton_filas - 1)) {//llamar graficar warning
+        var result = {
+            resultado: "warning",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    if (contador_active === carton_filas) {//llamar graficar success
+        var result = {
+            resultado: "success",
+            array_numeros: numeros_marcar
+        };
+        return result;
+    }
+    var result = {
+        resultado: ""
+    };
+    return result;
+}
+
+
+/**
+ * Funcion que valida gane en X
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_en_x(carton) {
+
+    var validar_gane_superior = gane_diagonal_superior_izquierda_a_inferior_derecha(carton);
+    var validar_gane_inferior = gane_diagonal_inferior_izquierda_a_superior_derecha(carton);
+    if (((validar_gane_superior.resultado === "success") && validar_gane_inferior.resultado === "warning") ||
+            ((validar_gane_inferior.resultado === "success") && validar_gane_superior.resultado === "warning")) {
+        var result = {
+            resultado: "warning",
+            array_numeros: validar_gane_superior.array_numeros.concat(validar_gane_inferior.array_numeros)
+        };
+        return result;
+    }
+    if ((validar_gane_superior.resultado === "success") && (validar_gane_inferior.resultado === "success")) {
+        var result = {
+            resultado: "success",
+            array_numeros: validar_gane_superior.array_numeros.concat(validar_gane_inferior.array_numeros)
+        };
+        return result;
+    }
+    var result = {
+        resultado: ""
+    };
+    return result;
+}
+
+
+
+/**
+ * Funcion que valida gane linea horizontal
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_linea_horizontal(carton) {
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    for (var fila = 0; fila < carton_filas; fila++) {
+        var contador_active = 0;
+        var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[fila][columna].estado;
+            var num_id = carton.matriz_num[fila][columna].id;
+            if ((num_estado === "active")) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+        if (contador_active === (carton_filas - 1)) {//llamar graficar warning
+            graficar_warning(numeros_marcar);
+        }
+        if (contador_active === carton_filas) {//llamar graficar success
+            graficar_success(numeros_marcar);
+        }
+    }
+}
+/**
+ * Funcion que valida gane en una linea especifica
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_linea(fila_gane, carton) {
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    for (var fila = 0; fila < carton_filas; fila++) {
+        var contador_active = 0;
+        var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[fila][columna].estado;
+            var num_id = carton.matriz_num[fila][columna].id;
+            if ((num_estado === "active") && (fila_gane === fila)) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+        if (contador_active === (carton_filas - 1)) {//llamar graficar warning
+            graficar_warning(numeros_marcar);
+        }
+        if (contador_active === carton_filas) {//llamar graficar success
+            graficar_success(numeros_marcar);
+        }
+    }
+}
+
+/**
+ * Funcion que valida gane linea Vertical
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_linea_vertical(carton) {
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    for (var fila = 0; fila < carton_filas; fila++) {
+        var contador_active = 0;
+        var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[columna][fila].estado;
+            var num_id = carton.matriz_num[columna][fila].id;
+            if ((num_estado === "active")) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+        if (contador_active === (carton_filas - 1)) {//llamar graficar warning
+            graficar_warning(numeros_marcar);
+        }
+        if (contador_active === carton_filas) {//llamar graficar success
+            graficar_success(numeros_marcar);
+        }
+    }
+}
+/**
+ * Funcion que valida gane linea Vertical
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function gane_columna(columna_gane, carton) {
+
+    var carton_filas = parseInt(carton.num_filas);
+    var carton_columnas = parseInt(carton.num_columnas);
+    for (var fila = 0; fila < carton_filas; fila++) {
+        var contador_active = 0;
+        var numeros_marcar = new Array();//array de id con los numeros a marcar con warning o success
+        for (var columna = 0; columna < carton_columnas; columna++) {
+            var num_estado = carton.matriz_num[columna][fila].estado;
+            var num_id = carton.matriz_num[columna][fila].id;
+            if ((num_estado === "active") && (fila === columna_gane)) {
+                numeros_marcar.push(num_id);
+                contador_active++;
+            }
+        }
+        if (contador_active === (carton_filas - 1)) {//llamar graficar warning
+            graficar_warning(numeros_marcar);
+        }
+        if (contador_active === carton_filas) {//llamar graficar success
+            graficar_success(numeros_marcar);
+        }
+    }
+}
+
+/**
+ * Funcion genérica para graficar con la clase warning
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+
+function graficar_warning(array_id_numeros) {
+    var array_length = array_id_numeros.length;
+    for (var fila = 0; fila < array_length; fila++) {
+        set_warning(array_id_numeros[fila]);
+    }
+}
+
+/**
+ * Funcion genérica para graficar con la clase success
+ * @author Yeinel Rodriguez Murillo
+ * @version 1.0
+ */
+function graficar_success(array_id_numeros) {
+    var array_length = array_id_numeros.length;
+    for (var fila = 0; fila < array_length; fila++) {
+        set_success(array_id_numeros[fila]);
+    }
 }
 
 //---------- Fin Funciones del juego -------------------------------------------

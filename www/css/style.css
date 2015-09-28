@@ -21,6 +21,7 @@
     font-size: 25px;
     text-align: center;
     border: none;
+    background: #fff;
 }
 .carton-content .warning input[type="number"]{
     background-color: #fcf8e3;
